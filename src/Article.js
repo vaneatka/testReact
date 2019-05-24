@@ -1,23 +1,62 @@
 import React, {Component} from 'react';
 import db from './db/posts';
 import './Article.css'
-import DrawArticle from './DrawArticle';
 class Article extends Component{
-   state = {
-       data:db
-   }
+    constructor(props){
+        super(props);
+        this.state = {
+            data:db
+        }
+    this.onDelete = this.onDelete.bind(this);
+    }
+   onDelete = (e) =>{
+       const {data} = this.state;
+       const obj = data.filter(x => x.id === e)[0];
+       const index = data.indexOf(obj)
+       data.splice(index, 1);
+       this.setState({data})
+       console.log(obj.id, index);
+       };
    
-   onDelete = () =>{
-       console.log();
-       }
-   
-    render(){               
-        
+    drawArticle = (arr) => {                 
+        const article = arr.map(element => {  
+                      
+            return (
+            <div id="posts" className="well" key = {arr.id}>  
+            <article>
+                <header>
+                    <h3> {element.title} </h3>
+                </header>
+                <section>
+                    <p>{element.body}</p>
+                </section>
+                <footer>
+                    <div className="tags" >
+                        {
+                            element.tags.map(tag => <button className="btn btn-xs btn-default">{tag}</button> )
+                        }                            
+                    </div>
+                </footer>
+                <div className="controls">
+                    <button className="btn btn-danger btn-mini" onClick = {()=>this.onDelete(element.id)} >удалить</button>
+                </div>
+            </article>  
+        </div> );
+        });
+        this.componentDidUpdate =()=> {
+            this.drawArticle(this.state.data);
+        }
 
+        return article;
 
+       };
+
+    render(){           
+        const {data} = this.state;
+        console.log(data)
         return(
             <section>
-            <DrawArticle data = {this.state.data}/>
+            {this.drawArticle(data)}
             
             <form id="post-add" className="col-lg-4">
                 <div className="form-group">
