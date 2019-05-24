@@ -1,0 +1,5 @@
+#header {}
+#header ol {}
+    #header ol li {
+        margin-bottom: 7px;
+    }
